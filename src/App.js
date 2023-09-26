@@ -5,14 +5,7 @@ import { Box, Heading, Button } from "theme-ui";
 import Grid from './compnents/grid';
 
 function App() {
-  // const [_logs, setLogs] = useState<string>("")
-  // const [_step, setStep] = useState<number>(1)
-  // const [_identity, setIdentity] = useState<Identity>()
-  // const [_signer, setSigner] = useState<Signer>()
-  // const [_contract, setContract] = useState<Contract>()
-  // const [_ercContract, setErcContract] = useState<Contract>()
   const [currentAccount, setCurrentAccount] = useState();
-  // const [_event, setEvent] = useState<any>()
   const [loading, setLoading] = useState(false);
 
 
