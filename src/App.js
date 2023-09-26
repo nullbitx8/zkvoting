@@ -3,11 +3,11 @@ import './App.css';
 import detectEthereumProvider from "@metamask/detect-provider"
 import { Box, Heading, Button } from "theme-ui";
 import Grid from './compnents/grid';
+import Semaphore from './compnents/semaphore';
 
 function App() {
   const [currentAccount, setCurrentAccount] = useState();
   const [loading, setLoading] = useState(false);
-
 
   const connectWallet = async () => {
     setLoading(true)
@@ -31,6 +31,7 @@ function App() {
 
   return (
     <Box>
+      <Semaphore />
       <Button mt={5} onClick={connectWallet} isLoading={loading}>Connect Wallet</Button>
       {currentAccount ? <p>🟢  { currentAccount }</p> : <p>🔴  no wallet connected </p>}
       <Heading sx={{textAlign:"center"}} >
