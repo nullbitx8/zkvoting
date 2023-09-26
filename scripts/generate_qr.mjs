@@ -5,7 +5,10 @@ const SECRETS_FILE = "./scripts/secrets.json";
 
 const existing_json = fs.readFileSync(SECRETS_FILE, "utf8")
 const existing_secrets = JSON.parse(existing_json);
-console.log(existing_secrets[0]);
+
+if (!fs.existsSync('./scripts/QR_CODES')){
+  fs.mkdirSync('./scripts/QR_CODES');
+}
 
 let identity = 0;
 for (let i = 0; i < existing_secrets.length ; i ++) {
