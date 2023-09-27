@@ -6,6 +6,7 @@ import {SemaphoreEthers} from "@semaphore-protocol/data";
 import {Group} from "@semaphore-protocol/group";
 import {Identity} from "@semaphore-protocol/identity";
 import {generateProof} from "@semaphore-protocol/proof";
+import 'dotenv/config';
 
 const Grid = () => {
   /// { project_id: value: [0,5,10]   }
@@ -29,21 +30,26 @@ const Grid = () => {
     let encodedSignal = encodeSignal(choices);
     console.log("encoded Signal is", encodedSignal)
 
-    const semaphoreData = new SemaphoreEthers(process.env.RPC, {
-      address: process.env.CONTRACT
+    const semaphoreData = new SemaphoreEthers(process.env.REACT_APP_RPC, {
+      address: process.env.REACT_APP_CONTRACT
     })
 
-    const group_id = process.env.GROUP_ID;
-    const commitments = await semaphoreData.getGroupMembers(group_id.toString());
-    const group = new Group(group_id.toString(), 16, commitments);
-    const identity = new Identity(process.env.SECRET);
+    const group_id = process.env.REACT_APP_GROUP_ID;
+    console.log(group_id)
+    const commitments = await semaphoreData.getGroupMembers(group_id);
+    const group = new Group(group_id, 16, commitments);
+    const identity = new Identity(process.env.REACT_APP_SECRET);
     const signal = "55913308326943162161974572271060082063423079659240540471751403101436616302030";
 
     const fullProof = await generateProof(
       identity,
       group,
       group.root,
-      signal
+      signal,
+      {
+        wasmFilePath: "./semaphore.wasm",
+        zkeyFilePath: "./semaphore.zkey"
+      }
     )
 
     const data = {
@@ -55,24 +61,26 @@ const Grid = () => {
       proof: JSON.stringify(fullProof.proof),
     }
 
-    const response = await fetch("https://zkvoting-relayer.vercel.app/api/relayer", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    })
-      .then(response => response.json())
-
-    console.log(response);
+    console.log(data)
+    //const response = await fetch("https://zkvoting-relayer.vercel.app/api/relayer", {
+    //  method: "POST",
+    //  headers: {
+    //    "Content-Type": "application/json",
+    //  },
+    //  body: JSON.stringify(data),
+    //})
+    //  .then(response => response.json())
+//
+    //console.log(response);
   }
 
   return (
     <>
       <Flex sx={{mt: [5]}}>
-        {projects.map(({title, project_url, project_id}) => {
+        {projects.map(({title, project_url, project_id}, index) => {
           return (
             <Project
+              key={index}
               title={title}
               project_url={project_url}
               project_id={project_id}
