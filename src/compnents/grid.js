@@ -39,13 +39,12 @@ const Grid = () => {
     const commitments = await semaphoreData.getGroupMembers(group_id);
     const group = new Group(group_id, 16, commitments);
     const identity = new Identity(process.env.REACT_APP_SECRET);
-    const signal = "55913308326943162161974572271060082063423079659240540471751403101436616302030";
 
     const fullProof = await generateProof(
       identity,
       group,
       group.root,
-      signal,
+      encodedSignal,
       {
         wasmFilePath: "./semaphore.wasm",
         zkeyFilePath: "./semaphore.zkey"
