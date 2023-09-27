@@ -2,6 +2,10 @@ import {useEffect, useState} from "react";
 import {Flex, Box, Paragraph, Select, Button} from "theme-ui";
 import {encodeSignal} from "../lib";
 import {ProjectsRepository} from "../repositories/projects_repository";
+import {SemaphoreEthers} from "@semaphore-protocol/data";
+import {Group} from "@semaphore-protocol/group";
+import {Identity} from "@semaphore-protocol/identity";
+import {generateProof} from "@semaphore-protocol/proof";
 
 const Grid = () => {
   /// { project_id: value: [0,5,10]   }
@@ -20,12 +24,47 @@ const Grid = () => {
     setChoices({...choices, [project_id]: value})
   }
 
-  const onSubmit = () => {
+  const onSubmit = async () => {
     // encode signal
     let encodedSignal = encodeSignal(choices);
     console.log("encoded Signal is", encodedSignal)
 
-    // TODO : generate proof and call `verifyProof` on semaphore
+    const semaphoreData = new SemaphoreEthers(process.env.RPC, {
+      address: process.env.CONTRACT
+    })
+
+    const group_id = process.env.GROUP_ID;
+    const commitments = await semaphoreData.getGroupMembers(group_id.toString());
+    const group = new Group(group_id.toString(), 16, commitments);
+    const identity = new Identity(process.env.SECRET);
+    const signal = "55913308326943162161974572271060082063423079659240540471751403101436616302030";
+
+    const fullProof = await generateProof(
+      identity,
+      group,
+      group.root,
+      signal
+    )
+
+    const data = {
+      group_id: group_id.toString(),
+      merkle_tree_root: fullProof.merkleTreeRoot,
+      signal: fullProof.signal,
+      identity_nullifier: fullProof.nullifierHash,
+      externalNullifier: fullProof.externalNullifier,
+      proof: JSON.stringify(fullProof.proof),
+    }
+
+    const response = await fetch("https://zkvoting-relayer.vercel.app/api/relayer", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+      .then(response => response.json())
+
+    console.log(response);
   }
 
   return (
