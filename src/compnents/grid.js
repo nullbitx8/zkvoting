@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import {useEffect, useMemo, useState} from "react";
 import {Flex, Box, Paragraph, Select, Button} from "theme-ui";
 import {encodeSignal} from "../lib";
 import {ProjectsRepository} from "../repositories/projects_repository";
@@ -12,6 +12,9 @@ const Grid = () => {
   /// { project_id: value: [0,5,10]   }
   const [choices, setChoices] = useState({});
   const [projects, setProjects] = useState([]);
+  const [commitments, setCommitments] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const group_id = process.env.REACT_APP_GROUP_ID;
 
   useEffect(() => {
     const load = async () => {
@@ -21,22 +24,29 @@ const Grid = () => {
     load()
   }, [])
 
+  useEffect(() => {
+    const load = async () => {
+      const semaphoreData = new SemaphoreEthers(process.env.REACT_APP_RPC, {
+        address: process.env.REACT_APP_CONTRACT
+      })
+      const commitments = await semaphoreData.getGroupMembers(group_id);
+      setCommitments(commitments);
+      setIsLoading(false);
+    }
+    load()
+  }, [])
+
   const setChoice = (project_id, value) => {
     setChoices({...choices, [project_id]: value})
   }
 
+  const allowSubmit = useMemo(() => {
+    return !isLoading && Object.keys(choices).length > 0
+  })
+
   const onSubmit = async () => {
-    // encode signal
     let encodedSignal = encodeSignal(choices);
-    console.log("encoded Signal is", encodedSignal)
 
-    const semaphoreData = new SemaphoreEthers(process.env.REACT_APP_RPC, {
-      address: process.env.REACT_APP_CONTRACT
-    })
-
-    const group_id = process.env.REACT_APP_GROUP_ID;
-    console.log(group_id)
-    const commitments = await semaphoreData.getGroupMembers(group_id);
     const group = new Group(group_id, 16, commitments);
     const identity = new Identity(process.env.REACT_APP_SECRET);
 
@@ -60,17 +70,13 @@ const Grid = () => {
       proof: JSON.stringify(fullProof.proof),
     }
 
-    console.log(data)
-    //const response = await fetch("https://zkvoting-relayer.vercel.app/api/relayer", {
-    //  method: "POST",
-    //  headers: {
-    //    "Content-Type": "application/json",
-    //  },
-    //  body: JSON.stringify(data),
-    //})
-    //  .then(response => response.json())
-//
-    //console.log(response);
+    await fetch("https://zkvoting-relayer.vercel.app/api/relayer", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
   }
 
   return (
@@ -88,9 +94,13 @@ const Grid = () => {
           );
         })}
       </Flex>
-      <Flex sx={{mt: [5]}}>
-        <Button onClick={onSubmit}>Submit</Button>
-      </Flex>
+      {
+        allowSubmit
+          ? <Flex sx={{mt: [5]}}>
+            <Button onClick={onSubmit}>Submit</Button>
+          </Flex>
+          : null
+      }
     </>
   );
 };
