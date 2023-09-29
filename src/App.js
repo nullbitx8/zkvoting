@@ -31,9 +31,6 @@ function App() {
 
   return (
     <Box>
-      {!currentAccount && <Button mt={5} onClick={connectWallet} isLoading={loading}>Connect Wallet</Button>}
-
-      {currentAccount ? <p>🟢  { currentAccount }</p> : <p>🔴  no wallet connected </p>}
       <Heading sx={{textAlign:"center"}} >
         The greates zk-voting app ever
       </Heading>
