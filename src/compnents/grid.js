@@ -71,7 +71,7 @@ const Grid = () => {
     }
 
     await fetch("https://zkvoting-relayer.vercel.app/api/relayer", {
-      method: "GET",
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
@@ -97,7 +97,9 @@ const Grid = () => {
       {
         allowSubmit
           ? <Flex sx={{mt: [5]}}>
-            <Button onClick={onSubmit}>Submit</Button>
+            <Button onClick={() => {
+              onSubmit();
+            }}>Submit</Button>
           </Flex>
           : null
       }
