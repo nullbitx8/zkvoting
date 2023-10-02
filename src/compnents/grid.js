@@ -15,6 +15,8 @@ const Grid = () => {
   const [commitments, setCommitments] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const group_id = process.env.REACT_APP_GROUP_ID;
+  const params = new URLSearchParams(window.location.search)
+  const secret = params.get('s')
 
   useEffect(() => {
     const load = async () => {
@@ -34,7 +36,7 @@ const Grid = () => {
       setIsLoading(false);
     }
     load()
-  }, [])
+  }, [group_id])
 
   const setChoice = (project_id, value) => {
     setChoices({...choices, [project_id]: value})
@@ -42,13 +44,13 @@ const Grid = () => {
 
   const allowSubmit = useMemo(() => {
     return !isLoading && Object.keys(choices).length > 0
-  })
+  }, [choices, isLoading])
 
   const onSubmit = async () => {
     let encodedSignal = encodeSignal(choices);
 
     const group = new Group(group_id, 16, commitments);
-    const identity = new Identity(process.env.REACT_APP_SECRET);
+    const identity = new Identity(secret);
 
     const fullProof = await generateProof(
       identity,
