@@ -31,10 +31,6 @@ export const store_group_id = (group_id) => {
   dump_json(group_id, GROUP_ID_FILE);
 }
 
-export const load_group_id = () => {
-  return BigInt(fs.readFileSync(GROUP_ID_FILE));
-}
-
 const dump_json = (contents, file) => {
   fs.writeFileSync(file, contents, "utf8");
 }
