@@ -45,9 +45,7 @@ for (const item of items) {
       votes[byte_project] = byte_value
     }
   }
-
-  console.log(votes)
-
 }
+console.log(votes)
 
 console.log("Done");
