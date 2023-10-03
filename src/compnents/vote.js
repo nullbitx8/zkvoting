@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Paragraph } from "theme-ui";
 
 const maxTotalVotes = 60;
 const maxVotesPerCandidate = 20;
@@ -112,6 +113,8 @@ const VotingComponent = () => {
                     color: "white",
                     borderRadius: "5px",
                     margin: "10px",
+                    maxHeight: "100px",
+                    padding: "5px 20px",
                   }}
                   onClick={() => sendVote(index, "down")}
                 >
@@ -122,13 +125,24 @@ const VotingComponent = () => {
                 style={{
                   padding: "10px",
                   display: "flex",
-                  gap: "10px",
-                  alignItems: "center",
-                  color: "black",
+                  flexDirection: "column",
                 }}
               >
-                <p>{`${candidate.first} ${candidate.last}`}</p>
-                <p>${candidate.votes}</p>
+                <p
+                  style={{
+                    margin: "0px",
+                  }}
+                >{`Funding: $${candidate.votes}`}</p>
+                <p
+                  style={{
+                    margin: "0px",
+                  }}
+                >{`${candidate.first} ${candidate.last}`}</p>
+                <Paragraph>
+                  some super big description about the candidate and why you
+                  should vote for them sjkadfkj sadfsadf sadfsadfaf
+                  sadfsadffsdaf fsadfsdaf sadfsadffsdaffsad fsadfsdaffsad fsd
+                </Paragraph>
               </div>
               {candidate.votes < maxVotesPerCandidate ? (
                 <button
@@ -140,6 +154,7 @@ const VotingComponent = () => {
                     lineBreak: "auto",
                     borderRadius: "5px",
                     margin: "10px",
+                    maxHeight: "100px",
                   }}
                   onClick={() => sendVote(index, "up")}
                 >
@@ -154,8 +169,14 @@ const VotingComponent = () => {
                     padding: "5px 20px",
                     margin: "10px",
                     borderRadius: "5px",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    maxHeight: "100px",
                   }}
-                ></div>
+                >
+                  max
+                </div>
               )}
             </div>
           );
