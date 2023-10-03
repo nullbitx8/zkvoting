@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import './App.css'; // Assuming your CSS file is named App.css
 
 const candidates = [
   {
@@ -36,7 +35,6 @@ const VotingComponent = () => {
     if (raceOver) {
       return;
     }
-    
     const updatedCandidates = [...candidates];
     updatedCandidates[index].votes++;
     if (updatedCandidates[index].votes === 5) {
@@ -76,7 +74,9 @@ const VotingComponent = () => {
             <div className="name">{`${candidate.first} ${candidate.last}`}</div>
             <div className="votes">{candidate.votes}</div>
             {!raceOver && (
-              <button onClick={() => sendVote(index)}>Vote</button>
+              <button onClick={() => {sendVote(index)
+            console.log("vote sent")
+            }}>Vote</button>
             )}
           </div>
         ))}

@@ -37,6 +37,9 @@
   }
 }
 
+iframe {
+  pointer-events: none;
+}
 
 .container{
   max-width:600px;
