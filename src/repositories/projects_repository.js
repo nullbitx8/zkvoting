@@ -1,9 +1,23 @@
-import fs from "fs";
-
 export class ProjectsRepository {
   static projects() {
-    const projects = fs.readFileSync("projects.json")
-    return Promise.resolve(projects);
+    //return this.call("GET", "https://viaprize.com/projects")
+    return Promise.resolve([
+      {
+        title: "Create a web3 Gofundme",
+        project_url: "description 1",
+        project_id: 1,
+      },
+      {
+        title: "Create a blog for Zuzalu",
+        project_url: "description 2",
+        project_id: 2,
+      },
+      {
+        title: "Title 3",
+        project_url: "description 3",
+        project_id: 2,
+      },
+    ])
   }
 
   call(method, url, data) {
