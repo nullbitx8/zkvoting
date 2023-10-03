@@ -32,7 +32,7 @@ store_group_id(group_id.toString());
 
 console.log("Adding identities...")
 
-for (let i = 0; i < 1; i++) {
+for (let i = 0; i < 3; i++) {
   const secrets = [];
   const commitments = [];
 
