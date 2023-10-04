@@ -83,8 +83,8 @@ const secrets = [
 
 const images = [
   "https://i.imgur.com/XjYkzuJ.png",
-  "https://i.imgur.com/BCgvXBC.png",
   "https://i.imgur.com/TIeMQcv.png",
+  "https://i.imgur.com/BCgvXBC.png",
   "https://i.imgur.com/8kwm2DO.png",
   "https://i.imgur.com/RGiZbQv.png"
 ]
@@ -92,10 +92,42 @@ const images = [
 function App() {
   return (
     <Box>
-      {secrets.slice(0, 3).map((secret) => {
+      {secrets.slice(0, 6).map((secret) => {
+        return (
+          <CUTE_QR
+            image={images[0]}
+            secret={secret}
+          />
+        );
+      })}
+      {secrets.slice(6, 30).map((secret) => {
         return (
           <CUTE_QR
             image={images[1]}
+            secret={secret}
+          />
+        );
+      })}
+      {secrets.slice(30, 45).map((secret) => {
+        return (
+          <CUTE_QR
+            image={images[2]}
+            secret={secret}
+          />
+        );
+      })}
+      {secrets.slice(45, 60).map((secret) => {
+        return (
+          <CUTE_QR
+            image={images[3]}
+            secret={secret}
+          />
+        );
+      })}
+      {secrets.slice(60, 75).map((secret) => {
+        return (
+          <CUTE_QR
+            image={images[4]}
             secret={secret}
           />
         );
@@ -112,7 +144,7 @@ function App() {
 
 
 const CUTE_QR = ({ secret, image }) => {
-  let url = `https://viaprize-zk.vercel.app?s=${secret}`
+  let url = `https://zk-voting.viaprize.org?s=${secret}`
   return (
     <QRImage
       image={image}
