@@ -81,14 +81,6 @@ const candidates = [
     link: "https://www.viaprize.org/campaign/161/a-social-graph-to-make-connections-in-web3-communities",
   },
   {
-    title: "Cyb3rliving room booking and (potentially p2p payment)",
-    description:
-      "We want to handle place booking, connect digital nomad to local nomad :). And adding infra like p2p money exchange on chain. (potentially)",
-    image:
-      "https://www.viaprize.org/api/image/campaign_detail_large/campaign/04/7a/20/0E2BFE00-63F6-11EE-BA6E-5E65CE8206F8-image-2f74a1994b86e8d6ed9356bbdf9ff84ac000999a012f98cabf4fed7292d31bf4.png",
-    link: "https://www.viaprize.org/campaign/167/cyb3rliving-room-booking-and-potentially-p2p-payment",
-  },
-  {
     title: "Github Inspired Platform but for Public Good Contribution",
 
     description:
@@ -132,15 +124,6 @@ const candidates = [
 
     description:
       '<strong>Problem:<br></strong>Hackathons should be a competition of meritocracy. Prizes are awarded to those who submit projects with the best implementation. However, hackathons sometimes receive submissions with significant pre-built work and it makes the competition unfair for those who start from a blank repository.<br><br><strong>Objective:</strong><br>This proposal is to create a system that will flag projects that have a significant amount of changes in a single commit, a codebase with significant resemblance to a pre-existing project, and blatant shilling of personal projects.<strong><br></strong><strong><br>Potential Approach:</strong><br>To create a fair hackathon, there should be rules in place in addition to a technical flagging system. First, when a hackathon is announced, we should explicit state the following disqualifiers: &nbsp;<br>- projects that shill a current company/startup<br>- pre-built projects are not allowed<br>- projects with a significant amount of changes in a single commit.<br><br>Next, the hackathon platform will adopt a plugin that pre-analyzes repositories. Each hackathon URL is passed through the plugin where each commit is assessed whether it is too large to be "human" written. We encourage small and frequent commits.&nbsp;',
-  },
-  {
-    link: "https://www.viaprize.org/campaign/172/nomad-meetup-app",
-    image:
-      "https://www.viaprize.org/api/image/campaign_detail_large/campaign/9d/0d/40/BA02862C-6400-11EE-981B-5E65CE8206F8-image-71b4def270799dc4832f7f5264e7b42dac304ae20ff11abca1339dd99f2f4e72.jpg",
-
-    description:
-      'Build a nomad meetup app for increasing serendipitous meetups and schelling points by allowing someone to create a DID gated group.<br><br>Members can add their itinerary as a gantt timeline, opt-in to show their approximate live location on a map, and perhaps have a timeline slider on the map so you may see how dots of where people plan to be shift around for various dates. (See <a href="https://usespacetime.com/" rel="noopener noreferrer" target="_blank">UseSpaceTime.com</a> <a href="https://replit.com/@OliverSauter/SpaceTime-Zuzalu-Fork" rel="noopener noreferrer" target="_blank">https://replit.com/@OliverSauter/SpaceTime-Zuzalu-Fork</a>. We also own the nomadmeetup.com domain)<br><br>Use Zupass to gate the group but if possible design the code to be easy to gate a group using an SBT token or other types of on-chain identifiers.<br>Code for Zupass: <a href="https://github.com/proofcarryingdata/zupass" rel="noopener noreferrer noopener noreferrer noopener noreferrer" target="_blank">https://github.com/proofcarryingdata/zupass</a>',
-    title: "Nomad Meetup App",
   },
   {
     image:
