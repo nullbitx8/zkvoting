@@ -234,8 +234,10 @@ const VotingComponent = () => {
                   display: "flex",
                   justifyContent: "space-between",
                   border: "2px solid black",
+                  borderRight:"none",
+                  minWidth:"100%",
                   borderRadius: "5px",
-                  margin: "10px",
+                  margin: "10px"
                 }}
               >
                 {candidate.votes > 0 ? (
