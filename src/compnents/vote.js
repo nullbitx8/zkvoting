@@ -155,7 +155,7 @@ const VotingComponent = () => {
   const group_id = process.env.REACT_APP_GROUP_ID;
   const params = new URLSearchParams(window.location.search);
   const secret = params.get("s");
-  if (!secret) { return null };
+ 
 
   useEffect(() => {
     const load = async () => {
@@ -236,6 +236,7 @@ const VotingComponent = () => {
     setIsDisabled(true);
     localStorage.setItem("submit", true);
   };
+  if (!secret) { return null };
   return (
     <>
       <div
