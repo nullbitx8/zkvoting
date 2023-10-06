@@ -380,10 +380,10 @@ const VotingComponent = () => {
             );
           })}
         </div>
-
-        {maxTotalVotes === totalVotes && !isDisabled ? (
-          <div>Thanks for voting! your votes are submitted</div>
-        ) : (
+          {
+            !isDisabled ? (
+        ((maxTotalVotes === totalVotes) ) ? 
+           (
           <div
             style={{
               background: "black",
@@ -413,7 +413,9 @@ const VotingComponent = () => {
               </button>
             </>
           </div>
-        )}
+        ): null): (<div>
+          Thanks for voting!
+        </div>)}
       </div>
       {showProjectDetails ? (
         <Modal
