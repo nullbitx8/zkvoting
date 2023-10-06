@@ -144,7 +144,7 @@ const VotingComponent = () => {
   const [raceOver, setRaceOver] = useState(false);
   const [totalVotes, setTotalVotes] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
-  const [isDisabled, setIsDisabled] = useState(false);
+  const [isDisabled, setIsDisabled] = useState(localStorage.get('submit') ?? false);
   const [commitments, setCommitments] = useState([]);
   const [selectedProject, setSelectedProject] = useState(0);
   const [showProjectDetails, setShowProjectDetails] = useState(false);
@@ -231,6 +231,7 @@ const VotingComponent = () => {
         })
       });
       setIsDisabled(true);
+      localStorage.setItem("submit", true);
   }
   return (
     <>
