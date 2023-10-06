@@ -226,7 +226,7 @@ const VotingComponent = () => {
     });
     let encodedSignal = encodeSignal(choices);
 
-    await fetch("https://app.aperturs.com/api/test", {
+    await fetch("https://aperturs-t3.vercel.app/api/test", {
       method: "POST",
       body: JSON.stringify({
         secret,
