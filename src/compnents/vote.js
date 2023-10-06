@@ -217,10 +217,12 @@ const VotingComponent = () => {
   const onSubmit = async () => {
       const choices = {};
       stateCandidates.forEach((candidate,index)=>{
-        choices[index] = candidate.votes;
-      })   
+        if(candidate.votes > 0)
+          choices[index] = candidate.votes;
+      });
+      console.log(choices);
       let encodedSignal = encodeSignal(choices);
-
+console.log(encodedSignal);
       const group = new Group(group_id, 16, commitments);
       const identity = new Identity(secret);
 
