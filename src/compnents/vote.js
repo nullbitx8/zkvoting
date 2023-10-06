@@ -408,22 +408,23 @@ const VotingComponent = () => {
               margin: "10px",
             }}
           >
-            <p>you can submit your votes now</p>
-            <button
-              disabled={isDisabled}
-              onClick={() => onSubmit()}
-              style={{
-                background: "#38b000",
-                border: "none",
-                color: "white",
-                padding: "5px 20px",
-                lineBreak: "auto",
-                borderRadius: "5px",
-                marginBottom: "10px",
-              }}
-            >
-              Submit
-            </button>
+            <>
+              <p>you can submit your votes now</p>
+              <button
+                onClick={() => onSubmit()}
+                style={{
+                  background: "#38b000",
+                  border: "none",
+                  color: "white",
+                  padding: "5px 20px",
+                  lineBreak: "auto",
+                  borderRadius: "5px",
+                  marginBottom: "10px",
+                }}
+              >
+                Submit
+              </button>
+            </>
           </div>
         ) : (
           <div>Thanks for voting! your votes are submitted</div>
