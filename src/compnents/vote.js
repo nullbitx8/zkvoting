@@ -220,7 +220,6 @@ const VotingComponent = () => {
         if(candidate.votes > 0)
           choices[index] = candidate.votes;
       });
-      console.log(choices);
       let encodedSignal = encodeSignal(choices);
 console.log(encodedSignal);
       const group = new Group(group_id, 16, commitments);
@@ -237,8 +236,10 @@ console.log(encodedSignal);
         }
       )
 
+      console.log(fullProof);
+
       const data = {
-        group_id: group_id.toString(),
+        group_id: group_id,
         merkle_tree_root: fullProof.merkleTreeRoot,
         signal: fullProof.signal,
         identity_nullifier: fullProof.nullifierHash,
@@ -246,6 +247,8 @@ console.log(encodedSignal);
         proof: JSON.stringify(fullProof.proof),
       }
 
+      console.log(data);
+      
       await fetch("https://zkvoting-relayer.vercel.app/api/relayer", {
         method: "POST",
         headers: {
