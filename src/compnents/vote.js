@@ -392,7 +392,6 @@ const VotingComponent = () => {
                 <>
                   <p>you can submit your votes now</p>
                   <button
-                    disabled={}
                     onClick={() => onSubmit()}
                     style={{
                       background: "#38b000",
