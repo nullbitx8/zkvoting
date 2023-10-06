@@ -1,5 +1,5 @@
-import React, {useState} from "react";
-import {Paragraph} from "theme-ui";
+import React, { useEffect, useLayoutEffect, useState } from "react";
+import { Paragraph } from "theme-ui";
 import Modal from "./modal";
 
 const maxTotalVotes = 60;
@@ -44,20 +44,30 @@ const candidates = [
       "2. Forking GitLab and Stream lining this process using this .\n" +
       "            a. Bascially fork Gitlab frontend ,",
     votes: 0,
+    image: 'https://storage.googleapis.com/proudcity/mebanenc/uploads/2021/03/placeholder-image.png'
   },
   {
     project_id: 2,
     title: "Create a blog for Zuzalu",
     description: "",
+    image: "https://storage.googleapis.com/proudcity/mebanenc/uploads/2021/03/placeholder-image.png",
     votes: 0,
   },
   {
     project_id: 3,
     title: "Title 3",
     description: "",
+    image: "https://storage.googleapis.com/proudcity/mebanenc/uploads/2021/03/placeholder-image.png",
     votes: 0,
   },
+  { title: "string", description: "string #but this will be hmtl string", image: "string #url" }
 ];
+
+function hmtlToText(text) {
+  var strippedHtml = text.replace(/<[^>]+>/g, '');
+  return strippedHtml
+
+}
 
 const VotingComponent = () => {
   const [raceOver, setRaceOver] = useState(false);
@@ -65,8 +75,10 @@ const VotingComponent = () => {
   const [selectedProject, setSelectedProject] = useState(0);
   const [showProjectDetails, setShowProjectDetails] = useState(false);
 
+
+
   const sendVote = (index, voteType) => {
-    const updatedCandidates = [...candidates];
+    const updatedCandidates = [...stateCandidates];
     if (
       voteType === "up" &&
       totalVotes < maxTotalVotes &&
@@ -83,21 +95,35 @@ const VotingComponent = () => {
   };
 
   const openDetails = (project_id) => {
+    console.log(project_id);
     setSelectedProject(project_id);
     setShowProjectDetails(true);
   }
 
-  const [stateCandidates, setCandidates] = useState(candidates);
+
+
+  const [stateCandidates, setCandidates] = useState([]);
+
+  useEffect(() => {
+    const updatedCandidates = candidates.map(candidate => ({
+       ...candidate,votes:0
+    }))
+    setCandidates(updatedCandidates)
+    console.log(stateCandidates)
+  }, [])
 
   const endRace = (candidates) => {
     setRaceOver(true);
     // Additional logic for the race being over
   };
 
+
+
   return (
     <>
       <div
         style={{
+          display: 'relative',
           fontFamily: "Arial, sans-serif",
           color: "black",
           padding: "20px",
@@ -148,7 +174,6 @@ const VotingComponent = () => {
                       color: "white",
                       borderRadius: "5px",
                       margin: "10px",
-                      maxHeight: "100px",
                       padding: "5px 20px",
                     }}
                     onClick={() => sendVote(index, "down")}
@@ -175,12 +200,12 @@ const VotingComponent = () => {
                   >{`${candidate.title}`}</p>
                   <Paragraph>
                     <div
-                      dangerouslySetInnerHTML={
-                        {__html: candidate.description.split(' ').slice(0, 75).join(' ')}
-                      }>
+                    >
+                      {hmtlToText(candidate.description).slice(0, 55)}
                     </div>
                     <span onClick={() => {
-                      openDetails(candidate.project_id)
+                      console.log('clicked')
+                      openDetails(index)
                     }}>Read more
                     </span>
                   </Paragraph>
@@ -195,7 +220,6 @@ const VotingComponent = () => {
                       lineBreak: "auto",
                       borderRadius: "5px",
                       margin: "10px",
-                      maxHeight: "100px",
                     }}
                     onClick={() => sendVote(index, "up")}
                   >
@@ -213,7 +237,6 @@ const VotingComponent = () => {
                       display: "flex",
                       justifyContent: "center",
                       alignItems: "center",
-                      maxHeight: "100px",
                     }}
                   >
                     max
@@ -223,6 +246,7 @@ const VotingComponent = () => {
             );
           })}
         </div>
+
         {maxTotalVotes === totalVotes && (
           <div
             style={{
@@ -252,13 +276,14 @@ const VotingComponent = () => {
           </div>
         )}
       </div>
-      <Modal
-        open={showProjectDetails}
-        onClose={() => setShowProjectDetails(false)}
-        project={{
-          description: ""
-        }}
-      />
+      {
+        showProjectDetails
+          ? <Modal
+            onClose={() => setShowProjectDetails(false)}
+            project={candidates[selectedProject]}
+          />
+          : null
+      }
     </>
   );
 };
