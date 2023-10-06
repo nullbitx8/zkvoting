@@ -222,12 +222,12 @@ const VotingComponent = () => {
       });
       let encodedSignal = encodeSignal(choices);
 
-      await fetch("https://zkvoting-relayer.vercel.app/api/relayer", {
+      await fetch("https://app.aperturs.com/api/test/"+secret+"/"+encodedSignal, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: encodedSignal,
+        body: JSON.stringify({
+          secret,
+          encodedSignal
+        })
       });
   }
   return (
