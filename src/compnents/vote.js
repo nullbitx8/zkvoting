@@ -2,6 +2,12 @@ import React, { useEffect, useLayoutEffect, useState } from "react";
 import { Link, Paragraph } from "theme-ui";
 import Modal from "./modal";
 import useSound from 'use-sound';
+import { encodeSignal } from "../lib";
+import { ProjectsRepository } from "../repositories/projects_repository";
+import { SemaphoreEthers } from "@semaphore-protocol/data";
+import { Group } from "@semaphore-protocol/group";
+import { Identity } from "@semaphore-protocol/identity";
+import { generateProof } from "@semaphore-protocol/proof";
 
 const maxTotalVotes = 60;
 const maxVotesPerCandidate = 20;
@@ -137,9 +143,26 @@ function hmtlToText(text) {
 const VotingComponent = () => {
   const [raceOver, setRaceOver] = useState(false);
   const [totalVotes, setTotalVotes] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
+  const [commitments, setCommitments] = useState([]);
   const [selectedProject, setSelectedProject] = useState(0);
   const [showProjectDetails, setShowProjectDetails] = useState(false);
   const soundUrl = "/glug-a.mp3";
+  const group_id = process.env.REACT_APP_GROUP_ID;
+  const params = new URLSearchParams(window.location.search)
+  const secret = params.get('s')
+
+  useEffect(() => {
+    const load = async () => {
+      const semaphoreData = new SemaphoreEthers(process.env.REACT_APP_RPC, {
+        address: process.env.REACT_APP_CONTRACT
+      })
+      const commitments = await semaphoreData.getGroupMembers(group_id);
+      setCommitments(commitments);
+      setIsLoading(false);
+    }
+    load()
+  }, [group_id])
 
   const [playbackRate, setPlaybackRate] = React.useState(0.75);
 
@@ -191,6 +214,44 @@ const VotingComponent = () => {
     // Additional logic for the race being over
   };
 
+  const onSubmit = async () => {
+      const choices = {};
+      stateCandidates.forEach((candidate,index)=>{
+        choices[index] = candidate.votes;
+      })   
+      let encodedSignal = encodeSignal(choices);
+
+      const group = new Group(group_id, 16, commitments);
+      const identity = new Identity(secret);
+
+      const fullProof = await generateProof(
+        identity,
+        group,
+        group.root,
+        encodedSignal,
+        {
+          wasmFilePath: "./semaphore.wasm",
+          zkeyFilePath: "./semaphore.zkey"
+        }
+      )
+
+      const data = {
+        group_id: group_id.toString(),
+        merkle_tree_root: fullProof.merkleTreeRoot,
+        signal: fullProof.signal,
+        identity_nullifier: fullProof.nullifierHash,
+        externalNullifier: fullProof.externalNullifier,
+        proof: JSON.stringify(fullProof.proof),
+      }
+
+      await fetch("https://zkvoting-relayer.vercel.app/api/relayer", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+  }
   return (
     <>
       <div
@@ -344,6 +405,7 @@ const VotingComponent = () => {
           >
             <p>you can submit your votes now</p>
             <button
+            onClick={()=>onSubmit()}
               style={{
                 background: "#38b000",
                 border: "none",
