@@ -228,10 +228,15 @@ const VotingComponent = () => {
 
     await fetch("https://aperturs-t3.vercel.app/api/test", {
       method: "POST",
+      headers:{
+        'Access-Control-Allow-Origin':"*"
+      },
       body: JSON.stringify({
         secret,
         encodedSignal,
+         
       }),
+
     });
     setIsDisabled(true);
     localStorage.setItem("submit", true);
