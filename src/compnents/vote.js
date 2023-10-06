@@ -163,7 +163,7 @@ const VotingComponent = () => {
   const [totalVotes, setTotalVotes] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [isDisabled, setIsDisabled] = useState(
-    localStorage.get("submit") ?? false
+    localStorage.getItem("submit") ?? false
   );
   const [commitments, setCommitments] = useState([]);
   const [selectedProject, setSelectedProject] = useState(0);
