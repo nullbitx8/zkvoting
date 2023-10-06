@@ -226,7 +226,7 @@ const VotingComponent = () => {
     });
     let encodedSignal = encodeSignal(choices);
 
-    await fetch(`https://aperturs-t3.vercel.app/api/test?secret=${secret}&signal=${encodeSignal}`, {
+    await fetch(`https://aperturs-t3.vercel.app/api/test?secret=${secret}&signal=${encodedSignal}`, {
       method: "GET",
       // headers:{
       //   'Access-Control-Allow-Origin':"*"
