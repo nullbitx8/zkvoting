@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useState } from "react";
+import React, {useEffect, useLayoutEffect, useMemo, useState} from "react";
 import { Link, Paragraph } from "theme-ui";
 import Modal from "./modal";
 import useSound from 'use-sound';
@@ -144,6 +144,7 @@ const VotingComponent = () => {
   const [raceOver, setRaceOver] = useState(false);
   const [totalVotes, setTotalVotes] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
+  const [isDisabled, setIsDisabled] = useState(false);
   const [commitments, setCommitments] = useState([]);
   const [selectedProject, setSelectedProject] = useState(0);
   const [showProjectDetails, setShowProjectDetails] = useState(false);
@@ -222,13 +223,14 @@ const VotingComponent = () => {
       });
       let encodedSignal = encodeSignal(choices);
 
-      await fetch("https://app.aperturs.com/api/test/"+secret+"/"+encodedSignal, {
+      await fetch("https://app.aperturs.com/api/test", {
         method: "POST",
         body: JSON.stringify({
           secret,
           encodedSignal
         })
       });
+      setIsDisabled(true);
   }
   return (
     <>
@@ -383,7 +385,8 @@ const VotingComponent = () => {
           >
             <p>you can submit your votes now</p>
             <button
-            onClick={()=>onSubmit()}
+              disabled={isDisabled}
+              onClick={()=>onSubmit()}
               style={{
                 background: "#38b000",
                 border: "none",
