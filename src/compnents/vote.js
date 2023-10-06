@@ -172,6 +172,7 @@ const VotingComponent = () => {
   const group_id = process.env.REACT_APP_GROUP_ID;
   const params = new URLSearchParams(window.location.search);
   const secret = params.get("s");
+  if (!secret) { return null };
 
   useEffect(() => {
     const load = async () => {
@@ -397,6 +398,8 @@ const VotingComponent = () => {
         </div>
 
         {maxTotalVotes === totalVotes && !isDisabled ? (
+          <div>Thanks for voting! your votes are submitted</div>
+        ) : (
           <div
             style={{
               background: "black",
@@ -426,8 +429,6 @@ const VotingComponent = () => {
               </button>
             </>
           </div>
-        ) : (
-          <div>Thanks for voting! your votes are submitted</div>
         )}
       </div>
       {showProjectDetails ? (
