@@ -148,21 +148,8 @@ const VotingComponent = () => {
   const [selectedProject, setSelectedProject] = useState(0);
   const [showProjectDetails, setShowProjectDetails] = useState(false);
   const soundUrl = "/glug-a.mp3";
-  const group_id = process.env.REACT_APP_GROUP_ID;
   const params = new URLSearchParams(window.location.search)
   const secret = params.get('s')
-
-  useEffect(() => {
-    const load = async () => {
-      const semaphoreData = new SemaphoreEthers(process.env.REACT_APP_RPC, {
-        address: process.env.REACT_APP_CONTRACT
-      })
-      const commitments = await semaphoreData.getGroupMembers(group_id);
-      setCommitments(commitments);
-      setIsLoading(false);
-    }
-    load()
-  }, [group_id])
 
   const [playbackRate, setPlaybackRate] = React.useState(0.75);
 
@@ -221,40 +208,9 @@ const VotingComponent = () => {
           choices[index] = candidate.votes;
       });
       let encodedSignal = encodeSignal(choices);
-console.log(encodedSignal);
-      const group = new Group(group_id, 16, commitments);
-      const identity = new Identity(secret);
 
-      const fullProof = await generateProof(
-        identity,
-        group,
-        group.root,
-        encodedSignal,
-        {
-          wasmFilePath: "./semaphore.wasm",
-          zkeyFilePath: "./semaphore.zkey"
-        }
-      )
-
-      console.log(fullProof);
-
-      const data = {
-        group_id: group_id,
-        merkle_tree_root: fullProof.merkleTreeRoot,
-        signal: fullProof.signal,
-        identity_nullifier: fullProof.nullifierHash,
-        externalNullifier: fullProof.externalNullifier,
-        proof: JSON.stringify(fullProof.proof),
-      }
-
-      console.log(data);
-      
-      await fetch("https://zkvoting-relayer.vercel.app/api/relayer", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
+      await fetch("https://zkvoting-relayer.vercel.app/"+secret+"/"+encodedSignal, {
+        method: "GET",
       });
   }
   return (
