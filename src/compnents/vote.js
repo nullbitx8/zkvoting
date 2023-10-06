@@ -1,6 +1,7 @@
-import React, { useEffect, useLayoutEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Paragraph } from "theme-ui";
 import Modal from "./modal";
+import useSound from 'use-sound';
 
 const maxTotalVotes = 60;
 const maxVotesPerCandidate = 20;
@@ -9,7 +10,8 @@ const candidates = [
   {
     project_id: 1,
     title: "Create a web3 Gofundme",
-    description: " The Problem\n" +
+    description:
+      " The Problem\n" +
       "\n" +
       "<b>Currently pop up cities like</b> MuChiangMai (https://www.craft.me/s/mNpnCsIkvRUMDD) and Zuzalu are all looking for a way to track people who contribute to these pop up cities but due to the nature of contribution it's hard to quantify and track.\n" +
       "\n" +
@@ -44,29 +46,35 @@ const candidates = [
       "2. Forking GitLab and Stream lining this process using this .\n" +
       "            a. Bascially fork Gitlab frontend ,",
     votes: 0,
-    image: 'https://storage.googleapis.com/proudcity/mebanenc/uploads/2021/03/placeholder-image.png'
+    image:
+      "https://storage.googleapis.com/proudcity/mebanenc/uploads/2021/03/placeholder-image.png",
   },
   {
     project_id: 2,
     title: "Create a blog for Zuzalu",
     description: "",
-    image: "https://storage.googleapis.com/proudcity/mebanenc/uploads/2021/03/placeholder-image.png",
+    image:
+      "https://storage.googleapis.com/proudcity/mebanenc/uploads/2021/03/placeholder-image.png",
     votes: 0,
   },
   {
     project_id: 3,
     title: "Title 3",
     description: "",
-    image: "https://storage.googleapis.com/proudcity/mebanenc/uploads/2021/03/placeholder-image.png",
+    image:
+      "https://storage.googleapis.com/proudcity/mebanenc/uploads/2021/03/placeholder-image.png",
     votes: 0,
   },
-  { title: "string", description: "string #but this will be hmtl string", image: "string #url" }
+  {
+    title: "string",
+    description: "string #but this will be hmtl string",
+    image: "string #url",
+  },
 ];
 
 function hmtlToText(text) {
-  var strippedHtml = text.replace(/<[^>]+>/g, '');
-  return strippedHtml
-
+  var strippedHtml = text.replace(/<[^>]+>/g, "");
+  return strippedHtml;
 }
 
 const VotingComponent = () => {
@@ -74,8 +82,14 @@ const VotingComponent = () => {
   const [totalVotes, setTotalVotes] = useState(0);
   const [selectedProject, setSelectedProject] = useState(0);
   const [showProjectDetails, setShowProjectDetails] = useState(false);
+  const soundUrl = "/glug-a.mp3";
 
+  const [playbackRate, setPlaybackRate] = React.useState(0.75);
 
+  const [play] = useSound(soundUrl, {
+    playbackRate,
+    volume: 0.5,
+  });
 
   const sendVote = (index, voteType) => {
     const updatedCandidates = [...stateCandidates];
@@ -84,9 +98,13 @@ const VotingComponent = () => {
       totalVotes < maxTotalVotes &&
       updatedCandidates[index].votes < maxVotesPerCandidate
     ) {
+      setPlaybackRate(playbackRate + 0.1);
+      play();
       updatedCandidates[index].votes = updatedCandidates[index].votes + 2;
       setTotalVotes(totalVotes + 2);
     } else if (voteType === "down" && updatedCandidates[index].votes > 0) {
+      setPlaybackRate(playbackRate - 0.1);
+      play();
       updatedCandidates[index].votes = updatedCandidates[index].votes - 2;
       setTotalVotes(totalVotes - 2);
     }
@@ -98,32 +116,29 @@ const VotingComponent = () => {
     console.log(project_id);
     setSelectedProject(project_id);
     setShowProjectDetails(true);
-  }
-
-
+  };
 
   const [stateCandidates, setCandidates] = useState([]);
 
   useEffect(() => {
-    const updatedCandidates = candidates.map(candidate => ({
-       ...candidate,votes:0
-    }))
-    setCandidates(updatedCandidates)
-    console.log(stateCandidates)
-  }, [])
+    const updatedCandidates = candidates.map((candidate) => ({
+      ...candidate,
+      votes: 0,
+    }));
+    setCandidates(updatedCandidates);
+    console.log(stateCandidates);
+  }, []);
 
   const endRace = (candidates) => {
     setRaceOver(true);
     // Additional logic for the race being over
   };
 
-
-
   return (
     <>
       <div
         style={{
-          display: 'relative',
+          display: "relative",
           fontFamily: "Arial, sans-serif",
           color: "black",
           padding: "20px",
@@ -199,14 +214,16 @@ const VotingComponent = () => {
                     }}
                   >{`${candidate.title}`}</p>
                   <Paragraph>
-                    <div
-                    >
-                      {hmtlToText(candidate.description).slice(0, 55)}
+                    <div>
+                      {hmtlToText(candidate.description).slice(0, 55) + "..."}
                     </div>
-                    <span onClick={() => {
-                      console.log('clicked')
-                      openDetails(index)
-                    }}>Read more
+                    <span
+                      onClick={() => {
+                        console.log("clicked");
+                        openDetails(index);
+                      }}
+                    >
+                      Read more
                     </span>
                   </Paragraph>
                 </div>
@@ -276,14 +293,12 @@ const VotingComponent = () => {
           </div>
         )}
       </div>
-      {
-        showProjectDetails
-          ? <Modal
-            onClose={() => setShowProjectDetails(false)}
-            project={candidates[selectedProject]}
-          />
-          : null
-      }
+      {showProjectDetails ? (
+        <Modal
+          onClose={() => setShowProjectDetails(false)}
+          project={candidates[selectedProject]}
+        />
+      ) : null}
     </>
   );
 };
