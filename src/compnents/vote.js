@@ -272,7 +272,13 @@ const VotingComponent = () => {
                       margin: "0px",
                     }}
                   >{`${candidate.title}`}</p>
-                  <Link href={candidate.link}>{candidate.link}</Link>
+                  <a style={{
+                    overflowWrap: 'break-word',
+                    wordWrap:'break-word',
+                    hyphens: 'auto',
+                    wordBreak: 'break-all',
+                    paddingRight: '10px'
+                  }} href={candidate.link}>{candidate.link}</a>
                   <Paragraph>
                     <div>
                       {hmtlToText(candidate.description).slice(0, 55) + "..."}
