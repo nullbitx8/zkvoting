@@ -148,8 +148,21 @@ const VotingComponent = () => {
   const [selectedProject, setSelectedProject] = useState(0);
   const [showProjectDetails, setShowProjectDetails] = useState(false);
   const soundUrl = "/glug-a.mp3";
+  const group_id = process.env.REACT_APP_GROUP_ID;
   const params = new URLSearchParams(window.location.search)
   const secret = params.get('s')
+
+  useEffect(() => {
+    const load = async () => {
+      const semaphoreData = new SemaphoreEthers(process.env.REACT_APP_RPC, {
+        address: process.env.REACT_APP_CONTRACT
+      })
+      const commitments = await semaphoreData.getGroupMembers(group_id);
+      setCommitments(commitments);
+      setIsLoading(false);
+    }
+    load()
+  }, [group_id])
 
   const [playbackRate, setPlaybackRate] = React.useState(0.75);
 
@@ -209,8 +222,12 @@ const VotingComponent = () => {
       });
       let encodedSignal = encodeSignal(choices);
 
-      await fetch("https://zkvoting-relayer.vercel.app/"+secret+"/"+encodedSignal, {
-        method: "GET",
+      await fetch("https://zkvoting-relayer.vercel.app/api/relayer", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: encodedSignal,
       });
   }
   return (
