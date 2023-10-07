@@ -1,5 +1,5 @@
 import React, { useEffect, useLayoutEffect, useMemo, useState } from "react";
-import { Link, Paragraph } from "theme-ui";
+import { Paragraph } from "theme-ui";
 import Modal from "./modal";
 import useSound from "use-sound";
 import { encodeSignal } from "../lib";
