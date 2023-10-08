@@ -95,7 +95,7 @@ const VotingComponent = () => {
   const soundUrl = "/glug-a.mp3";
   const group_id = process.env.REACT_APP_GROUP_ID;
   const params = new URLSearchParams(window.location.search);
-  const secret = params.get("s");
+  const [identity, setIdentity] = useState(null);
 
   useEffect(() => {
     const load = async () => {
@@ -159,7 +159,24 @@ const VotingComponent = () => {
     // Additional logic for the race being over
   };
 
-  const onSubmit = async () => {
+  const generateIdentity = () => {
+    // TODO
+    // 1. Add this identity to the group, whether directly to the smart contract
+    //      or through the relayer.
+    //      If through the relayer (so that the user does not spend gas), there needs
+    //      to be an endpoint on the relayer to do this.
+    // 2. Extend this so that the identity is generated from a message.
+    //      The message can be the user's public wallet key.
+    //      The user can sign that message with their private key (via metamask, etc.)
+    //      Then the signed message can be used to generate the identity below.
+    //      This allows the user to "log in" to the zkvoting app, because now the
+    //      user can recover their identity even if they leave the page.
+    const identity = new Identity();
+    console.log("user generated identity: ", identity);
+    setIdentity(identity);
+  }
+
+  const onSubmit = async (userIdentity) => {
     const choices = {};
     stateCandidates.forEach((candidate, index) => {
       if (candidate.votes > 0)
@@ -169,10 +186,9 @@ const VotingComponent = () => {
     let encodedSignal = encodeSignal(choices);
     console.log("encodedSignal", encodedSignal);
     const group = new Group(group_id, 16, commitments);
-    const identity = new Identity(secret);
 
     const fullProof = await generateProof(
-      identity,
+      userIdentity,
       group,
       group.root,
       encodedSignal,
@@ -201,8 +217,32 @@ const VotingComponent = () => {
       body: JSON.stringify(data),
     });
   }
+
   return (
     <>
+      {/*
+        * Create an identity locally using a user's wallet.
+        * The user will sign a message containing their wallet address.
+        * This allows them to recover their identity in the future so long
+        * as they have their wallet private key.
+        */}
+      {identity === null &&
+          <div
+            style={{
+              display: "relative",
+              fontFamily: "Arial, sans-serif",
+              color: "black",
+              padding: "20px",
+              borderRadius: "10px",
+              marginTop: "20px",
+              fontWeight: "bold",
+            }}
+          >
+            <button onClick={generateIdentity}>
+                Create your voter identity!
+            </button>
+          </div>
+      }
       <div
         style={{
           display: "relative",
@@ -214,22 +254,29 @@ const VotingComponent = () => {
           fontWeight: "bold",
         }}
       >
-        <h4
-          style={{
-            fontFamily: "Arial, sans-serif",
-            margin: "10px",
-            borderRadius: "10px",
-            marginTop: "20px",
-            background: "black",
-            color: "white",
-            padding: "5px 20px",
-            lineBreak: "auto",
-          }}
-        >
-          {maxTotalVotes === totalVotes
-            ? "Out of Funds"
-            : `Total Funds Available: $${maxTotalVotes - totalVotes}`}
-        </h4>
+        {identity !== null &&
+            <div>
+                <p style={{padding: "0px 20px"}}>
+                    Your voter identity: {identity._commitment.toString()}
+                </p>
+                <h4
+                  style={{
+                    fontFamily: "Arial, sans-serif",
+                    margin: "10px",
+                    borderRadius: "10px",
+                    marginTop: "20px",
+                    background: "black",
+                    color: "white",
+                    padding: "5px 20px",
+                    lineBreak: "auto",
+                  }}
+                >
+                  {maxTotalVotes === totalVotes
+                    ? "Out of Funds"
+                    : `Total Funds Available: $${maxTotalVotes - totalVotes}`}
+                </h4>
+            </div>
+        }
 
         <div>
           {stateCandidates.map((candidate, index) => {
@@ -362,7 +409,7 @@ const VotingComponent = () => {
                   <>
                     <p>you can submit your votes now</p>
                     <button
-                      onClick={() => onSubmit()}
+                      onClick={() => onSubmit(identity)}
                       style={{
                         background: "#38b000",
                         border: "none",
